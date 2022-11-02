@@ -1,0 +1,48 @@
+<% if params[:buyzero] %>
+    <div class="alert alert-danger" role="alert">
+        You cannot buy this item anymore, it's already sold out
+    </div>
+<% elsif params[:buysuccess] %>
+    <div class="alert alert-success" role="alert">
+        This item has been added to your inventory
+    </div>
+<%end%>
+
+
+
+<% if session[:logged_in] %>
+    <p>Currently log in as : <%= @user_login_id.name %></p>
+<% else %>
+    <p> Login if you want to buy items</p>
+<%end%>
+
+
+<br>
+<h3><%= @user.name %>'s shop</h3>
+<table  class="table text-center table-light table-striped-columns ">
+    <thead class="table-info">
+        <th>Item_name</th>
+        <th>Picture</th>
+        <th>Item_price</th>
+        <th>Stock</th>
+        <% if session[:logged_in] %>
+        <th>BUY</th>
+        <% end %>
+    </thead>
+    <% @user.items.each do |u| %>
+        <tr>
+            <td><%= u.name %></td>
+            <% if(u.picture.attached?) %>
+                <td><%= image_tag u.picture.variant(:thumb100) %></td>
+            <% else %>
+                <td>N/A</td>
+            <% end %>
+            <td><%= u.price %></td>
+            <td><%= u.stock %></td>
+            <% if session[:logged_in] %>
+                <td><%= button_to "Buy", main_buy_item_path, params:{item_id:u.id, from_shop_user_id:@user.id}, class:"btn btn-primary" %></td>
+            <% end %>
+        </tr>
+    <%end%>
+
+</table>

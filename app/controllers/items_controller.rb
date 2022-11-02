@@ -13,10 +13,22 @@ class ItemsController < ApplicationController
   # GET /items/new
   def new
     @item = Item.new
+    @from_user_item = params[:from_user_item]
+    if @from_user_item
+      session[:from_user_item] = true
+    else 
+      session.delete(:from_user_item)
+    end
   end
 
   # GET /items/1/edit
   def edit
+    @from_user_item = params[:from_user_item]
+    if @from_user_item
+      session[:from_user_item] = true
+    else 
+      session.delete(:from_user_item)
+    end
   end
 
   # POST /items or /items.json
@@ -38,6 +50,7 @@ class ItemsController < ApplicationController
   def update
     respond_to do |format|
       if @item.update(item_params)
+        @item.picture.attach(item_params[:picture])
         format.html { redirect_to item_url(@item), notice: "Item was successfully updated." }
         format.json { render :show, status: :ok, location: @item }
       else
@@ -65,6 +78,6 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.require(:item).permit(:user_id, :price, :name, :stock)
+      params.require(:item).permit(:user_id, :price, :name, :stock, :picture)
     end
 end

@@ -1,0 +1,26 @@
+<p>inventory of  <%= @user.name %></p>
+<table class="table text-center table-secondary table-striped table-hover">
+    <thead class="table-dark">
+        <th>Name</th>
+        <th>Picture</th>
+        <th>Price</th>
+        <th>Buy_from</th>
+        <th>Timestamp</th>
+    </thead>
+    <tbody>
+        <% @user.inventories.each do |inventory| %>
+            <tr>
+                <td><%= Item.find(inventory.item_id).name %></td>
+                <% if(Item.find(inventory.item_id).picture.attached?) %>
+                    <td><%= image_tag Item.find(inventory.item_id).picture.variant(:thumb100) %></td>
+                <% else %>
+                    <td>This item has no picture</td>
+                <% end %>
+                <td><%= inventory.price %></td>
+                <td><%= User.find(Item.find(inventory.item_id).user_id).name %></td>
+                <td><%= inventory.timestamp %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
+<br>
